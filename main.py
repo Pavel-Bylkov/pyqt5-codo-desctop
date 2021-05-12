@@ -18,6 +18,7 @@ class MainWindow(QWidget):
         self.resize(WIN_X, WIN_Y)
         self.create_widgets()
         self.layout_widgets()
+        self.lw_notebooks.addItems(self.data)  # загрузили список блокнотов
         self.connects()
         self.show()
 
@@ -78,9 +79,30 @@ class MainWindow(QWidget):
         self.btn_save.clicked.connect(self.note_save)
         self.btn_add_notebooks.clicked.connect(self.add_notebooks)
         self.btn_add_notes.clicked.connect(self.add_notes)
+        self.lw_notebooks.itemClicked.connect(self.show_notes)
+        self.lw_notes.itemClicked.connect(self.show_note)
 
     def note_save(self):
         pass
+
+    def show_notes(self):
+        """Получаем список заметок и отображаем его"""
+        if self.lw_notebooks.selectedItems():
+            notebook = self.lw_notebooks.selectedItems()[0].text()
+            self.lw_notes.clear()
+            self.lw_notes.addItems(self.data[notebook])
+        else:
+            QMessageBox.warning(self, "Уведомление", "Не выбран блокнот")
+
+    def show_note(self):
+        """Получаем текст из заметки с выделенным названием и отображаем его в поле редактирования"""
+        if self.lw_notebooks.selectedItems():
+            notebook = self.lw_notebooks.selectedItems()[0].text()
+            if self.lw_notes.selectedItems():
+                note = self.lw_notes.selectedItems()[0].text()
+                self.te_note_text.setText(self.data[notebook][note]["текст"])
+        else:
+            QMessageBox.warning(self, "Уведомление", "Не выбран блокнот для заметки")
 
     def add_notebooks(self):
         name_notebooks, ok = QInputDialog.getText(self, "Создать блокнот", "Название блокнота: ")
