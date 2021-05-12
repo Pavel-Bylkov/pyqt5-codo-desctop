@@ -93,6 +93,7 @@ class MainWindow(QWidget):
                     }
                  }
                 self.lw_notebooks.addItem(name_notebooks)
+                self.write_data()
             else:
                 QMessageBox.warning(self, "Уведомление", "Блокнот уже существует!")
         elif ok:
@@ -109,6 +110,7 @@ class MainWindow(QWidget):
                             'теги': []
                         }
                     self.lw_notes.addItem(name_note)
+                    self.write_data()
                 else:
                     QMessageBox.warning(self, "Уведомление", "Заметка уже существует!")
             elif ok:
