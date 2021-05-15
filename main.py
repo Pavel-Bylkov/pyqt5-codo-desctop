@@ -44,6 +44,7 @@ class MainWindow(QWidget):
     def create_widgets(self):
         self.lb_notebooks = QLabel("Список блокнотов")
         self.lw_notebooks = QListWidget()
+        self.lw_notebooks.setGridSize()
         self.btn_add_notebooks = QPushButton("Создать блокнот")
         self.lb_notes = QLabel("Список заметок")
         self.lw_notes = QListWidget()
@@ -55,12 +56,12 @@ class MainWindow(QWidget):
         main_row = QHBoxLayout()
         colum1 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         colum1.addWidget(self.lb_notebooks, alignment=Qt.AlignLeft)
-        colum1.addWidget(self.lw_notebooks, alignment=Qt.AlignCenter, stretch=80)
+        colum1.addWidget(self.lw_notebooks, 80, alignment=Qt.AlignCenter)
         colum1.addWidget(self.btn_add_notebooks, alignment=Qt.AlignCenter)
 
         colum2 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         colum2.addWidget(self.lb_notes, alignment=Qt.AlignLeft)
-        colum2.addWidget(self.lw_notes, alignment=Qt.AlignCenter, stretch=80)
+        colum2.addWidget(self.lw_notes, alignment=Qt.AlignCenter)
         colum2.addWidget(self.btn_add_notes, alignment=Qt.AlignCenter)
 
         colum3 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
@@ -69,9 +70,9 @@ class MainWindow(QWidget):
         colum3.addLayout(row)
         colum3.addWidget(self.te_note_text, alignment=Qt.AlignCenter)
 
-        main_row.addLayout(colum1, stretch=20)
-        main_row.addLayout(colum2, stretch=20)
-        main_row.addLayout(colum3, stretch=60)
+        main_row.addLayout(colum1, stretch=1)
+        main_row.addLayout(colum2, stretch=1)
+        main_row.addLayout(colum3, stretch=3)
 
         self.setLayout(main_row)  # Привязываем линию к окну
 
