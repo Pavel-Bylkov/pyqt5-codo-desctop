@@ -2,10 +2,11 @@ import json
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QVBoxLayout, QListWidget, QTextEdit,
-                             QHBoxLayout, QInputDialog, QMessageBox, QDialog)
+                             QHBoxLayout, QInputDialog, QMessageBox)
 
 # ToDo Добавить возможность добавлять теги и делать быстрый поиск по тегам
 # ToDo Добавить поле для редактирования названия заметки
+# Todo Добавить возможность редактировать название блокнота
 
 WIN_X, WIN_Y = 1200, 800
 filename = "data.json"
