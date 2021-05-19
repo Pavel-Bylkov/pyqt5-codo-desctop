@@ -64,7 +64,7 @@ class MainWindow(QWidget):
         main_row = QHBoxLayout()
         colum1 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         colum1.addWidget(self.lb_notebooks, alignment=Qt.AlignLeft)
-        colum1.addWidget(self.lw_notebooks, 80, alignment=Qt.AlignCenter)
+        colum1.addWidget(self.lw_notebooks, 80)
         row1 = QHBoxLayout()
         row1.addWidget(self.btn_add_notebook, alignment=Qt.AlignCenter)
         row1.addWidget(self.btn_del_notebook, alignment=Qt.AlignCenter)
@@ -72,7 +72,7 @@ class MainWindow(QWidget):
 
         colum2 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         colum2.addWidget(self.lb_notes, alignment=Qt.AlignLeft)
-        colum2.addWidget(self.lw_notes, 80, alignment=Qt.AlignCenter)
+        colum2.addWidget(self.lw_notes, 80)
         row2 = QHBoxLayout()
         row2.addWidget(self.btn_add_note, alignment=Qt.AlignCenter)
         row2.addWidget(self.btn_del_note, alignment=Qt.AlignCenter)
@@ -82,7 +82,7 @@ class MainWindow(QWidget):
         row = QHBoxLayout()
         row.addWidget(self.btn_save, alignment=Qt.AlignRight)
         colum3.addLayout(row)
-        colum3.addWidget(self.te_note_text, alignment=Qt.AlignCenter)
+        colum3.addWidget(self.te_note_text)
 
         main_row.addLayout(colum1, stretch=1)
         main_row.addLayout(colum2, stretch=1)
