@@ -5,9 +5,17 @@ from PyQt5.QtWidgets import (QApplication, QWidget, QPushButton, QLabel, QVBoxLa
                              QHBoxLayout, QInputDialog, QMessageBox)
 
 # ToDo Добавить возможность добавлять теги и делать быстрый поиск по тегам
+# ToDo Добавить поле для редактирования названия заметки
 
 WIN_X, WIN_Y = 1200, 800
 filename = "data.json"
+
+def default_note():
+    note = {"Заметка по умолчанию": {
+                        'текст': 'Это самое лучшее приложение для заметок в мире!',
+                        'теги': ['добро', 'инструкция']}
+            }
+    return note
 
 
 class MainWindow(QWidget):
@@ -18,23 +26,21 @@ class MainWindow(QWidget):
         self.resize(WIN_X, WIN_Y)
         self.create_widgets()
         self.layout_widgets()
-        self.lw_notebooks.addItems(self.data)  # загрузили список блокнотов
+        self.start_load_data()
         self.connects()
         self.show()
+
+    def start_load_data(self):
+        self.lw_notebooks.addItems(self.data)  # загрузили список блокнотов
+        self.lw_notebooks.setCurrentRow(0)
+        self.show_notes()
 
     def read_data(self):
         try:
             with open(filename, "r", encoding="utf-8") as file:
                 return json.load(file)
         except:
-            data = {"Блокнот по умолчанию":
-                {"Заметка по умолчанию":
-                    {
-                        'текст': 'Это самое лучшее приложение для заметок в мире!',
-                        'теги': ['добро', 'инструкция']
-                    }
-                 }
-                    }
+            data = {"Блокнот по умолчанию": default_note()}
             return data
 
     def write_data(self):
@@ -44,11 +50,12 @@ class MainWindow(QWidget):
     def create_widgets(self):
         self.lb_notebooks = QLabel("Список блокнотов")
         self.lw_notebooks = QListWidget()
-        self.lw_notebooks.setGridSize()
         self.btn_add_notebooks = QPushButton("Создать блокнот")
+        self.btn_del_notebooks = QPushButton("Удалить блокнот")
         self.lb_notes = QLabel("Список заметок")
         self.lw_notes = QListWidget()
         self.btn_add_notes = QPushButton("Добавить заметку")
+        self.btn_del_note = QPushButton("Удалить заметку")
         self.btn_save = QPushButton("Сохранить")
         self.te_note_text = QTextEdit()
 
@@ -57,12 +64,18 @@ class MainWindow(QWidget):
         colum1 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         colum1.addWidget(self.lb_notebooks, alignment=Qt.AlignLeft)
         colum1.addWidget(self.lw_notebooks, 80, alignment=Qt.AlignCenter)
-        colum1.addWidget(self.btn_add_notebooks, alignment=Qt.AlignCenter)
+        row1 = QHBoxLayout()
+        row1.addWidget(self.btn_add_notebooks, alignment=Qt.AlignCenter)
+        row1.addWidget(self.btn_del_notebooks, alignment=Qt.AlignCenter)
+        colum1.addLayout(row1)
 
         colum2 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         colum2.addWidget(self.lb_notes, alignment=Qt.AlignLeft)
-        colum2.addWidget(self.lw_notes, alignment=Qt.AlignCenter)
-        colum2.addWidget(self.btn_add_notes, alignment=Qt.AlignCenter)
+        colum2.addWidget(self.lw_notes, 80, alignment=Qt.AlignCenter)
+        row2 = QHBoxLayout()
+        row2.addWidget(self.btn_add_notes, alignment=Qt.AlignCenter)
+        row2.addWidget(self.btn_del_note, alignment=Qt.AlignCenter)
+        colum2.addLayout(row2)
 
         colum3 = QVBoxLayout()  # Создаем невидимый виджет для привязки других виджетов
         row = QHBoxLayout()
@@ -84,7 +97,16 @@ class MainWindow(QWidget):
         self.lw_notes.itemClicked.connect(self.show_note)
 
     def note_save(self):
-        pass
+        if self.lw_notebooks.selectedItems():
+            notebook = self.lw_notebooks.selectedItems()[0].text()
+            if self.lw_notes.selectedItems():
+                note = self.lw_notes.selectedItems()[0].text()
+                self.data[notebook][note]["текст"] = self.te_note_text.toPlainText()
+                self.write_data()
+            else:
+                QMessageBox.warning(self, "Уведомление", "Не выбрана заметка")
+        else:
+            QMessageBox.warning(self, "Уведомление", "Не выбран блокнот для заметки")
 
     def show_notes(self):
         """Получаем список заметок и отображаем его"""
@@ -92,6 +114,8 @@ class MainWindow(QWidget):
             notebook = self.lw_notebooks.selectedItems()[0].text()
             self.lw_notes.clear()
             self.lw_notes.addItems(self.data[notebook])
+            self.lw_notes.setCurrentRow(0)
+            self.show_note()
         else:
             QMessageBox.warning(self, "Уведомление", "Не выбран блокнот")
 
@@ -109,12 +133,7 @@ class MainWindow(QWidget):
         name_notebooks, ok = QInputDialog.getText(self, "Создать блокнот", "Название блокнота: ")
         if ok and name_notebooks != "":
             if name_notebooks not in self.data:
-                self.data[name_notebooks] = {"Заметка по умолчанию":
-                    {
-                        'текст': 'Это самое лучшее приложение для заметок в мире!',
-                        'теги': []
-                    }
-                 }
+                self.data[name_notebooks] = default_note()
                 self.lw_notebooks.addItem(name_notebooks)
                 self.write_data()
             else:
