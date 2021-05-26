@@ -132,6 +132,8 @@ class MainWindow(QWidget):
                         }
                     self.lw_notes.addItems(self.data[notebook])
                     self.lw_notes.setCurrentRow(0)
+                else:
+                    QMessageBox.warning(self, "Уведомление", "Заметка уже существует!")
                 self.write_data()
             else:
                 QMessageBox.warning(self, "Уведомление", "Не выбрана заметка")
